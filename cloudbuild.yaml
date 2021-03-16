@@ -1,0 +1,12 @@
+steps:
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args:
+      - functions
+      - deploy
+      - slack-wormhole
+      - --entry-point=recieve_slack_event
+      - --region=asia-northeast1
+      - --source=lib
+      - --runtime=ruby26
+      - --trigger-http
+      - --allow-unauthenticated
