@@ -8,6 +8,12 @@ FunctionsFramework.http 'recieve_slack_event' do |request|
   method = data['type']
   request.logger.info "Type is #{method}"
 
+  if method == 'event_callback'
+    data = data['event']
+    method = data['type']
+    request.logger.info "Event type is #{method}"
+  end
+
   SlackWormhole::Reciever.send(method, data) if SlackWormhole::Reciever.respond_to?(method)
 end
 
