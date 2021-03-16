@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
+require 'base64'
 require 'google/cloud/datastore'
 require 'google/cloud/pubsub'
-require 'slack-ruby-client'
-require 'base64'
+require 'google/cloud/secret_manager'
 require 'json'
+require 'slack-ruby-client'
 
-Slack::Web::Client.configure do |config|
-  config.token = ENV['SLACK_API_USER_TOKEN']
-  raise 'Missing ENV[SLACK_API_USER_TOKEN]!' unless config.token
+def slack_api_token
+  client = Google::Cloud::SecretManager.secret_manager_service
+  key = client.secret_version_path(project: ENV['GCP_PROJECT'],
+                                   secret: ENV['TOKEN_NAME'],
+                                   secret_version: 'latest')
 
-  $stdout.sync = true
-
-  config.logger = Logger.new($stdout)
-  config.logger.level = Logger::ERROR
+  client.access_secret_version(name: key).payload.data
 end
 
 def logger
@@ -25,11 +25,11 @@ def datastore
     @datastore
   elsif ENV['GOOGLE_APPLICATION_CREDENTIALS']
     @datastore = Google::Cloud::Datastore.new(
-      project_id: ENV['GCP_PROJECT_ID'],
+      project_id: ENV['GCP_PROJECT'],
       credentials: ENV['GOOGLE_APPLICATION_CREDENTIALS']
     )
   else
-    @datastore = Google::Cloud::Datastore.new(project_id: ENV['GCP_PROJECT_ID'])
+    @datastore = Google::Cloud::Datastore.new(project_id: ENV['GCP_PROJECT'])
   end
 end
 
@@ -38,11 +38,11 @@ def pubsub
     @pubsub
   elsif ENV['GOOGLE_APPLICATION_CREDENTIALS']
     @pubsub = Google::Cloud::Pubsub.new(
-      project_id: ENV['GCP_PROJECT_ID'],
+      project_id: ENV['GCP_PROJECT'],
       credentials: ENV['GOOGLE_APPLICATION_CREDENTIALS']
     )
   else
-    @pubsub = Google::Cloud::Pubsub.new(project_id: ENV['GCP_PROJECT_ID'])
+    @pubsub = Google::Cloud::Pubsub.new(project_id: ENV['GCP_PROJECT'])
   end
 end
 
@@ -55,7 +55,7 @@ def query
 end
 
 def web
-  @web ||= Slack::Web::Client.new
+  @web ||= Slack::Web::Client.new(token: slack_api_token)
 end
 
 def channel(id)
