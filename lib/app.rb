@@ -70,7 +70,7 @@ module SlackWormhole
         if (user = user(data['user']))
           name = username(user)
           data['text'].sub!(/<.+>/, name)
-          data.user = nil
+          data['user'] = nil
         end
         post_message(data)
       end
@@ -113,7 +113,7 @@ module SlackWormhole
           action: 'reaction_remove',
           room: channel(data['item']['channel']).name,
           userid: data['user'], username: name,
-          reaction: data.reaction, timestamp: data.item.ts
+          reaction: data['reaction'], timestamp: data['item']['ts']
         }
 
         publish(payload)
@@ -170,7 +170,7 @@ module SlackWormhole
       end
 
       def post_reply(data)
-        user = user(data.user)
+        user = user(data['user'])
         name = username(user)
         icon = user.profile.image_192
 
@@ -182,7 +182,7 @@ module SlackWormhole
           text: data['text'], reply_broadcast: data['reply_broadcast']
         }
 
-        q = query.where('timestamp', '=', data.thread_ts).limit(1)
+        q = query.where('timestamp', '=', data['thread_ts']).limit(1)
         datastore.run(q).each do |task|
           payload[:thread_ts] = task['originalTs']
         end
