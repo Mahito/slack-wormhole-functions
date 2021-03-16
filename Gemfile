@@ -7,6 +7,7 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 gem 'functions_framework'
 gem 'google-cloud-datastore'
 gem 'google-cloud-pubsub'
+gem 'google-cloud-secret_manager'
 gem 'slack-ruby-client'
 
 group :test, :development do

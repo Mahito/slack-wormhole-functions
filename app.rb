@@ -206,8 +206,6 @@ module SlackWormhole
         web.chat_postMessage(error_payload)
       rescue StandardError => e
         logger.error(e)
-        sleep 5
-        retry
       end
 
       def replace_username(payload)
