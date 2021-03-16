@@ -5,9 +5,9 @@ require_relative 'utils'
 
 FunctionsFramework.http 'recieve_slack_event' do |request|
   data = JSON.parse(request.body.read)
-  request.logger.info "Type is #{data['type']}"
-
   method = data['type']
+  request.logger.info "Type is #{method}"
+
   SlackWormhole::Reciever.send(method, data) if SlackWormhole::Reciever.respond_to?(method)
 end
 
@@ -16,6 +16,10 @@ module SlackWormhole
   # Event reciever
   module Reciever
     class << self
+      def url_verification
+        data['challenge']
+      end
+
       def message(data)
         res = { 'type': 'message' }
         if data['subtype'].nil?

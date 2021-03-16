@@ -1,4 +1,6 @@
 .bundle
 .env
+.env.yaml
 .ruby-version
 vendor
+Gemfile.lock
