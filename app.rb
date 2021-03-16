@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'functions_framework'
-require_relative 'utils'
+require_relative 'lib/utils'
 
 FunctionsFramework.http 'recieve_slack_event' do |request|
   data = JSON.parse(request.body.read)
