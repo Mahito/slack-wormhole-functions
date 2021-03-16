@@ -18,6 +18,20 @@ class AppTest < Minitest::Test
               'user' => '' }
   end
 
+  # type = url_verification
+  def test_get_message
+    load_temporary 'lib/app.rb' do
+      @data['type'] = 'url_verification'
+      @data['challenge'] = 'Challenge OK'
+
+      request = make_post_request 'https://example.com/recieve_slack_event',
+                                  JSON.dump(@data), ['Content-Type: application/json']
+
+      response = call_http 'recieve_slack_event', request
+      assert_equal 'Challenge OK', response.body.join
+    end
+  end
+
   # type = message, subtype = nil
   def test_get_message
     load_temporary 'lib/app.rb' do

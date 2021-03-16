@@ -16,7 +16,7 @@ module SlackWormhole
   # Event reciever
   module Reciever
     class << self
-      def url_verification
+      def url_verification(data)
         data['challenge']
       end
 
