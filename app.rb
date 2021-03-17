@@ -83,6 +83,10 @@ module SlackWormhole
         post_reply(data)
       end
 
+      def bot_message(data)
+        'SKIP'
+      end
+
       def reaction_added(data)
         user = user(data['user'])
         name = username(user)
