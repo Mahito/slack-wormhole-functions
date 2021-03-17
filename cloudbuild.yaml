@@ -3,10 +3,10 @@ steps:
     args:
       - functions
       - deploy
-      - slack-wormhole
+      - ${_FUNCTION_NAME}
       - --entry-point=recieve_slack_event
       - --region=asia-northeast1
-      - --source=lib
       - --runtime=ruby26
       - --trigger-http
       - --allow-unauthenticated
+      - --set-env-vars GCP_PROJECT=$PROJECT_ID,WORMHOLE_TOPIC_NAME=${_WORMHOLE_TOPIC_NAME},WORMHOLE_ENTITY_NAME=${_WORMHOLE_ENTITY_NAME},TOKEN_NAME=${_TOKEN_NAME}
