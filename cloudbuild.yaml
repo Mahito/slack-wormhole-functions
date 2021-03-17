@@ -1,6 +1,7 @@
 steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args:
+      - gcloud
       - functions
       - deploy
       - ${_FUNCTION_NAME}
@@ -9,4 +10,4 @@ steps:
       - --runtime=ruby26
       - --trigger-http
       - --allow-unauthenticated
-      - --set-env-vars GCP_PROJECT=$PROJECT_ID,WORMHOLE_TOPIC_NAME=${_WORMHOLE_TOPIC_NAME},WORMHOLE_ENTITY_NAME=${_WORMHOLE_ENTITY_NAME},TOKEN_NAME=${_TOKEN_NAME}
+      - --set-env-vars=GCP_PROJECT=$PROJECT_ID,WORMHOLE_TOPIC_NAME=${_WORMHOLE_TOPIC_NAME},WORMHOLE_ENTITY_NAME=${_WORMHOLE_ENTITY_NAME},TOKEN_NAME=${_TOKEN_NAME}
