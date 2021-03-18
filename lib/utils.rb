@@ -7,10 +7,10 @@ require 'google/cloud/secret_manager'
 require 'json'
 require 'slack-ruby-client'
 
-def slack_api_token
+def slack_api_token(secret)
   client = Google::Cloud::SecretManager.secret_manager_service
   key = client.secret_version_path(project: ENV['GCP_PROJECT'],
-                                   secret: ENV['TOKEN_NAME'],
+                                   secret: secret,
                                    secret_version: 'latest')
 
   client.access_secret_version(name: key).payload.data
@@ -55,7 +55,11 @@ def query
 end
 
 def web
-  @web ||= Slack::Web::Client.new(token: slack_api_token)
+  @web ||= Slack::Web::Client.new(token: slack_api_token(ENV['BOT_TOKEN_NAME']))
+end
+
+def slack_user
+  @slack_user ||= Slack::Web::Client.new(token: slack_api_token(ENV['USER_TOKEN_NAME']))
 end
 
 def channel(id)
