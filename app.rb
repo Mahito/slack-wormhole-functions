@@ -39,6 +39,7 @@ module SlackWormhole
             post_message(data)
           end
         else
+          logger.info("Subtype is #{data['subtype']}")
           send(data['subtype'], data)
           res['subtype'] = data['subtype']
         end
