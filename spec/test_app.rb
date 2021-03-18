@@ -176,6 +176,22 @@ class AppTest < Minitest::Test
     end
   end
 
+  # type = message, subtype = file_share
+  def test_get_message_with_subtype_bot_message
+    load_temporary 'app.rb' do
+      @data['event']['type'] = 'message'
+      @data['event']['subtype'] = 'file_share'
+      mock(SlackWormhole::Reciever).file_share(@data['event']) { 'SKIP' }
+
+      request = make_post_request 'https://example.com/recieve_slack_event',
+                                  JSON.dump(@data), ['Content-Type: application/json']
+
+      response = call_http 'recieve_slack_event', request
+      assert_equal 200, response.status
+      assert_equal '{"type":"message","subtype":"file_share"}', response.body.join
+    end
+  end
+
   # type = reaction_added
   def test_reaction_added
     load_temporary 'app.rb' do

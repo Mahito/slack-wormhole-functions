@@ -87,6 +87,10 @@ module SlackWormhole
         'SKIP'
       end
 
+      def file_share(data)
+        post_files(data)
+      end
+
       def reaction_added(data)
         user = user(data['user'])
         name = username(user)
