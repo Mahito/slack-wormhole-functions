@@ -10,12 +10,14 @@ class AppTest < Minitest::Test
 
   def setup
     @data = { 'type' => 'event_callback',
+              'event_id' => 'Ev08MFMKH6',
               'event' => {
                 'channel' => 'C0HT2PHEZ',
                 'item' => {
                   'channel' => 'C0HT2PHEZ',
                   'ts' => '12345678',
                 },
+                'event_id' => 'Ev08MFMKH6',
                 'ts' => '1234567',
                 'user' => '' }}
   end
@@ -38,7 +40,7 @@ class AppTest < Minitest::Test
   def test_get_message
     load_temporary 'app.rb' do
       @data['event']['type'] = 'message'
-      mock(SlackWormhole::Reciever).message(@data['event']) { 'OK' }
+      mock(SlackWormhole::EventHandler).message(@data['event']) { 'OK' }
 
       request = make_post_request 'https://example.com/recieve_slack_event',
                                   JSON.dump(@data), ['Content-Type: application/json']
@@ -53,7 +55,7 @@ class AppTest < Minitest::Test
     load_temporary 'app.rb' do
       @data['event']['type'] = 'message'
       @data['event']['files'] = true
-      mock(SlackWormhole::Reciever).post_files(@data['event']) { 'OK' }
+      mock(SlackWormhole::EventHandler).post_files(@data['event']) { 'OK' }
 
       request = make_post_request 'https://example.com/recieve_slack_event',
                                   JSON.dump(@data), ['Content-Type: application/json']
@@ -69,7 +71,7 @@ class AppTest < Minitest::Test
     load_temporary 'app.rb' do
       @data['event']['type'] = 'message'
       @data['event']['thread_ts'] = '1234567'
-      mock(SlackWormhole::Reciever).post_reply(@data['event']) { 'OK' }
+      mock(SlackWormhole::EventHandler).post_reply(@data['event']) { 'OK' }
 
       request = make_post_request 'https://example.com/recieve_slack_event',
                                   JSON.dump(@data), ['Content-Type: application/json']
@@ -85,7 +87,7 @@ class AppTest < Minitest::Test
     load_temporary 'app.rb' do
       @data['event']['type'] = 'message'
       @data['event']['subtype'] = 'message_changed'
-      mock(SlackWormhole::Reciever).message_changed(@data['event']) { 'OK' }
+      mock(SlackWormhole::EventHandler).message_changed(@data['event']) { 'OK' }
 
       request = make_post_request 'https://example.com/recieve_slack_event',
                                   JSON.dump(@data), ['Content-Type: application/json']
@@ -101,7 +103,7 @@ class AppTest < Minitest::Test
     load_temporary 'app.rb' do
       @data['event']['type'] = 'message'
       @data['event']['subtype'] = 'message_deleted'
-      mock(SlackWormhole::Reciever).message_deleted(@data['event']) { 'OK' }
+      mock(SlackWormhole::EventHandler).message_deleted(@data['event']) { 'OK' }
 
       request = make_post_request 'https://example.com/recieve_slack_event',
                                   JSON.dump(@data), ['Content-Type: application/json']
@@ -117,7 +119,7 @@ class AppTest < Minitest::Test
     load_temporary 'app.rb' do
       @data['event']['type'] = 'message'
       @data['event']['subtype'] = 'channel_join'
-      mock(SlackWormhole::Reciever).channel_join(@data['event']) { 'OK' }
+      mock(SlackWormhole::EventHandler).channel_join(@data['event']) { 'OK' }
 
       request = make_post_request 'https://example.com/recieve_slack_event',
                                   JSON.dump(@data), ['Content-Type: application/json']
@@ -133,7 +135,7 @@ class AppTest < Minitest::Test
     load_temporary 'app.rb' do
       @data['event']['type'] = 'message'
       @data['event']['subtype'] = 'channel_leave'
-      mock(SlackWormhole::Reciever).channel_leave(@data['event']) { 'OK' }
+      mock(SlackWormhole::EventHandler).channel_leave(@data['event']) { 'OK' }
 
       request = make_post_request 'https://example.com/recieve_slack_event',
                                   JSON.dump(@data), ['Content-Type: application/json']
@@ -149,7 +151,7 @@ class AppTest < Minitest::Test
     load_temporary 'app.rb' do
       @data['event']['type'] = 'message'
       @data['event']['subtype'] = 'thread_broadcast'
-      mock(SlackWormhole::Reciever).thread_broadcast(@data['event']) { 'OK' }
+      mock(SlackWormhole::EventHandler).thread_broadcast(@data['event']) { 'OK' }
 
       request = make_post_request 'https://example.com/recieve_slack_event',
                                   JSON.dump(@data), ['Content-Type: application/json']
@@ -165,7 +167,7 @@ class AppTest < Minitest::Test
     load_temporary 'app.rb' do
       @data['event']['type'] = 'message'
       @data['event']['subtype'] = 'bot_message'
-      mock(SlackWormhole::Reciever).bot_message(@data['event']) { 'SKIP' }
+      mock(SlackWormhole::EventHandler).bot_message(@data['event']) { 'SKIP' }
 
       request = make_post_request 'https://example.com/recieve_slack_event',
                                   JSON.dump(@data), ['Content-Type: application/json']
@@ -181,7 +183,7 @@ class AppTest < Minitest::Test
     load_temporary 'app.rb' do
       @data['event']['type'] = 'message'
       @data['event']['subtype'] = 'file_share'
-      mock(SlackWormhole::Reciever).file_share(@data['event']) { 'SKIP' }
+      mock(SlackWormhole::EventHandler).file_share(@data['event']) { 'SKIP' }
 
       request = make_post_request 'https://example.com/recieve_slack_event',
                                   JSON.dump(@data), ['Content-Type: application/json']
@@ -196,7 +198,7 @@ class AppTest < Minitest::Test
   def test_reaction_added
     load_temporary 'app.rb' do
       @data['event']['type'] = 'reaction_added'
-      mock(SlackWormhole::Reciever).reaction_added(@data['event']) { 'OK' }
+      mock(SlackWormhole::EventHandler).reaction_added(@data['event']) { 'OK' }
 
       request = make_post_request 'https://example.com/recieve_slack_event',
                                   JSON.dump(@data), ['Content-Type: application/json']
@@ -211,7 +213,7 @@ class AppTest < Minitest::Test
   def test_reaction_removed
     load_temporary 'app.rb' do
       @data['event']['type'] = 'reaction_removed'
-      mock(SlackWormhole::Reciever).reaction_removed(@data['event']) { 'OK' }
+      mock(SlackWormhole::EventHandler).reaction_removed(@data['event']) { 'OK' }
 
       request = make_post_request 'https://example.com/recieve_slack_event',
                                   JSON.dump(@data), ['Content-Type: application/json']
