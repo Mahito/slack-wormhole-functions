@@ -14,10 +14,11 @@ module SlackWormhole
 
         task = nil
         datastore.transaction do |tx|
-          task = tx.find event_id
+          event_key = datastore.key 'SlackEvent', event_id
+          task = tx.find event_key
           if task.nil?
             topic.publish(data)
-            task = datastore.entity event_id do |t|
+            task = datastore.entity event_key do |t|
               t['state'] = 'published'
             end
             tx.save task
