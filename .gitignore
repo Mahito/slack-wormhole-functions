@@ -2,4 +2,5 @@
 .env
 *.env.yaml
 .ruby-version
+deploy
 vendor

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'storage/cloud_storage'
 require_relative 'publisher'
 require_relative 'utils'
 
@@ -133,12 +134,10 @@ module SlackWormhole
 
       def post_files(data)
         data['files'].each do |f|
-          payload = {
-            file: f['id']
-          }
+          storage = Storage::CloudStorage.new(f)
 
-          res = slack_user.files_sharedPublicURL(payload)
-          data['text'] += "\n#{res['file']['permalink_public']}"
+          # 共有用画像の URL を text に追加
+          data['text'] += "\n#{storage.shared_url}"
         end
         post_message(data)
       end
