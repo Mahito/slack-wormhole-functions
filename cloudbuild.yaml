@@ -7,7 +7,8 @@ steps:
       - ${_FUNCTION_NAME}
       - --entry-point=recieve_slack_event
       - --region=asia-northeast1
-      - --runtime=ruby26
+      - --runtime=ruby32
       - --trigger-http
       - --allow-unauthenticated
-      - --set-env-vars=GCP_PROJECT=$PROJECT_ID,WORMHOLE_TOPIC_NAME=${_WORMHOLE_TOPIC_NAME},WORMHOLE_ENTITY_NAME=${_WORMHOLE_ENTITY_NAME},BOT_TOKEN_NAME=${_BOT_TOKEN_NAME},USER_TOKEN_NAME=${_USER_TOKEN_NAME}
+      - --docker-registry=artifact-registry
+      - --set-env-vars=GCP_PROJECT=$PROJECT_ID,WORMHOLE_TOPIC_NAME=${_WORMHOLE_TOPIC_NAME},WORMHOLE_ENTITY_NAME=${_WORMHOLE_ENTITY_NAME},BOT_TOKEN_NAME=${_BOT_TOKEN_NAME},USER_TOKEN_NAME=${_USER_TOKEN_NAME},GCP_ISSUER=${_GCP_ISSUER}
